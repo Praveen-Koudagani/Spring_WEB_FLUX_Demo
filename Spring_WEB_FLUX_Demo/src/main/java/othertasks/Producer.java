@@ -1,6 +1,7 @@
 package othertasks;
 
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 import lombok.extern.slf4j.Slf4j;
@@ -9,29 +10,40 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class Producer implements Callable {
 
-    private final List<Integer> data;
+    private final List<Student> data;
     private final int size;
 
-    public Producer(List<Integer> sharedQueue, int size) {
-        this.data = sharedQueue;
+    public Producer(List<Student> data, int size) {
+        this.data = data;
         this.size = size;
     }
 
     @Override
-    public Object call() {
-        for (int i = 0; i < 7; i++) {
-            log.info("Produced: " + i);
+    public Object call() throws InterruptedException {
+    	Scanner sc=new Scanner(System.in);
+    	log.info("enter production count:");
+    	int productioncount=sc.nextInt();
+    	int i=0;
+          while(i<productioncount) {
+        	
+        	log.info("enter id:");
+        	int id=sc.nextInt();
+        	log.info("enter name");
+        	String name=sc.next();
+        	Student student=new Student(id,name);
+            log.info("Produced: " + student.getName());
             try {
-                produce(i);
+                produce(student);
+                i++;
             } catch (InterruptedException ex) {
-                log.info(Producer.class.getName());
+                log.info(ex.getMessage());
             }
 
         }
         return true;
     }
 
-    private void produce(int i) throws InterruptedException {
+    private void produce(Student i) throws InterruptedException {
 
         //wait if the queue is full
         while (data.size() == size) {

@@ -8,30 +8,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class Consumer implements Callable {
 
-    private final List<Integer> data;
-    private final int size;
+    private final List<Student> data;
 
-    public Consumer(List<Integer> sharedQueue, int size) {
-        this.data = sharedQueue;
-        this.size = size;
+    public Consumer(List<Student> data) {
+        this.data = data;
     }
 
     public Object call() {
-    	int i=0;
-        while (i<this.size) {
+        while (!this.data.isEmpty()) {
             try {
-                log.info("Consumed: " + consume());
-                i++;
-                Thread.sleep(50);
+            	Thread.sleep(20000);
+            	Student st=consume();
+                log.info("Consumed: " + st.getId()+"  "+st.getName());
+                
             } catch (InterruptedException ex) {
-                log.info(Consumer.class.getName());
+                log.info(ex.getMessage());
             }
 
         }
         return true;
     }
 
-    private int consume() throws InterruptedException {
+    private Student consume() throws InterruptedException {
         //wait if the queue is empty
         while (data.isEmpty()) {
             synchronized (data) {
@@ -45,7 +43,7 @@ class Consumer implements Callable {
         //Otherwise consume element and notify the waiting producer
         synchronized (data) {
             data.notifyAll();
-            return (Integer) data.remove(0);
+            return  data.remove(0);
         }
     }
 }

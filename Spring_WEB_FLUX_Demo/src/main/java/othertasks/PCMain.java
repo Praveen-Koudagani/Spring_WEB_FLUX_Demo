@@ -12,12 +12,12 @@ public class PCMain {
 
 	    @SuppressWarnings("unchecked")
 		public static void main(String[] args) throws InterruptedException, ExecutionException {
-	        List<Integer> data = new ArrayList<>();
-	        int size = 4;
+	        List<Student> data = new ArrayList<>();
+	        int size = 2;
 	        @SuppressWarnings("rawtypes")
 			FutureTask producer=new FutureTask(new Producer(data, size));
 	        @SuppressWarnings("rawtypes")
-			FutureTask consumer=new FutureTask(new Consumer(data, size));
+			FutureTask consumer=new FutureTask(new Consumer(data));
 	        Thread prodThread = new Thread(producer, "Producer");
 	        Thread consThread = new Thread(consumer, "Consumer");
 	        prodThread.start();
