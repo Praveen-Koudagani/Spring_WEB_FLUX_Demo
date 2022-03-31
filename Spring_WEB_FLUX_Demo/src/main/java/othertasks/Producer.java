@@ -4,39 +4,41 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 
-import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 
 @SuppressWarnings("rawtypes")
-@Slf4j
 class Producer implements Callable {
 
+	private static final Logger logg = LogManager.getLogger(Producer.class);
     private final List<Student> data;
     private final int size;
-
-    public Producer(List<Student> data, int size) {
+    int productioncount;
+    public Producer(List<Student> data, int size,int count) {
         this.data = data;
         this.size = size;
+        this.productioncount=count;
     }
 
     @Override
-    public Object call() throws InterruptedException {
-    	Scanner sc=new Scanner(System.in);
-    	log.info("enter production count:");
-    	int productioncount=sc.nextInt();
+    public Object call() throws Exception {
+    	
     	int i=0;
+    	 Scanner sc=new Scanner(System.in);
           while(i<productioncount) {
-        	
-        	log.info("enter id:");
-        	int id=sc.nextInt();
-        	log.info("enter name");
-        	String name=sc.next();
-        	Student student=new Student(id,name);
-            log.info("Produced: " + student.getName());
             try {
+            	logg.info("enter id:");
+            	int id=sc.nextInt();
+            	logg.info("enter name");
+            	String name=sc.next();
+            	Student student=new Student(id,name);
+                logg.info("Produced: " + student.getName());
                 produce(student);
                 i++;
-            } catch (InterruptedException ex) {
-                log.info(ex.getMessage());
+            } catch (Exception ex) {
+                throw new Exception(ex.getMessage());
             }
 
         }
@@ -48,7 +50,7 @@ class Producer implements Callable {
         //wait if the queue is full
         while (data.size() == size) {
             synchronized (data) {
-                log.info("The queue is full " + Thread.currentThread().getName()
+                logg.info("The queue is full " + Thread.currentThread().getName()
                                     + " is waiting , size: " + data.size());
 
                 data.wait();

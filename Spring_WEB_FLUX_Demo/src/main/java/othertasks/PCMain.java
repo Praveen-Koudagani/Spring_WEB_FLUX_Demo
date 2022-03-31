@@ -2,34 +2,42 @@ package othertasks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-@Slf4j
+
+
+
 public class PCMain {
 
+	private static final Logger logg = LogManager.getLogger(PCMain.class);
 	    @SuppressWarnings("unchecked")
-		public static void main(String[] args) throws InterruptedException, ExecutionException {
+		public static void main(String[] args) throws Exception {
 	        List<Student> data = new ArrayList<>();
+	        Scanner sc=new Scanner(System.in);
+	    	logg.info("enter production count:");
+	    	int productioncount=sc.nextInt();
 	        int size = 2;
 	        @SuppressWarnings("rawtypes")
-			FutureTask producer=new FutureTask(new Producer(data, size));
+			FutureTask producer=new FutureTask(new Producer(data, size,productioncount));
 	        @SuppressWarnings("rawtypes")
-			FutureTask consumer=new FutureTask(new Consumer(data));
+			FutureTask consumer=new FutureTask(new Consumer(data,productioncount));
 	        Thread prodThread = new Thread(producer, "Producer");
 	        Thread consThread = new Thread(consumer, "Consumer");
 	        prodThread.start();
 	        consThread.start();
 	        if(!(boolean) producer.get()) {
-	        	log.info("Producer Task Encountered some problem");
+	        	logg.info("Producer Task Encountered some problem");
 	        }
 	        else if(!(boolean) consumer.get()) {
-	        	log.info("Consumer Task Encountered some problem");
+	        	logg.info("Consumer Task Encountered some problem");
 	        }
 	        else {
-	        	log.info("Producer and Consumer Tasks completed suceessfully...    :) ");
+	        	logg.info("Producer and Consumer Tasks completed suceessfully...    :) ");
 	        }
 	    }
 	
