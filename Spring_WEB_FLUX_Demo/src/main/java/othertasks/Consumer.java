@@ -22,7 +22,7 @@ class Consumer implements Callable {
         int i=0;
 		while(i<productioncount) {
             try {
-            	Thread.sleep(10000);
+            	Thread.sleep(15000);
             	Student st=consume();
                 logg.info("Consumed: " + st.getId()+"  "+st.getName());
                 i++;
@@ -41,15 +41,15 @@ class Consumer implements Callable {
             synchronized (data) {
                 logg.info("The queue is empty " + Thread.currentThread().getName()
                                     + " is waiting , size: " + data.size());
-
                 data.wait();
             }
         }
 
         //Otherwise consume element and notify the waiting producer
         synchronized (data) {
+        	Student student=data.remove(0);
             data.notifyAll();
-            return  data.remove(0);
+            return  student;
         }
     }
 }

@@ -52,7 +52,6 @@ class Producer implements Callable {
             synchronized (data) {
                 logg.info("The queue is full " + Thread.currentThread().getName()
                                     + " is waiting , size: " + data.size());
-
                 data.wait();
             }
         }
