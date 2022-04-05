@@ -41,7 +41,7 @@ public class MaxSubArray {
 			a++;
 		}
 		logg.info(String.format("Max_Sum:%d",ans));
-		numbers.subList(st, ed+1).forEach(i->logg.info(i));
+		numbers.subList(st+1, ed+1).forEach(i->logg.info(i));
 
 	}
 

@@ -18,9 +18,7 @@ public class IslandsProblem {
 					if((i-1)<n && (i-1)>=0 && j<m && j>=0 && matrix[i-1][j]==1) {
 					solve(i-1,j,n,m,c);}
 					if(i<n && i>=0 && j<m && (j-1)>=0 && matrix[i][j-1]==1) {
-					solve(i,j-1,n,m,c);}
-			
-		
+					solve(i,j-1,n,m,c);}		
 	}
 
 	public static void main(String[] args) {
